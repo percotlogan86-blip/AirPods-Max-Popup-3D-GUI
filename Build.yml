@@ -1,0 +1,31 @@
+
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Find project scheme
+        run: xcodebuild -list -project "Popup view app.xcodeproj"
+
+      - name: Build unsigned app
+        run: |
+          xcodebuild \
+            -project "Popup view app.xcodeproj" \
+            -scheme "project" \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
